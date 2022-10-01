@@ -17,4 +17,12 @@ class AuthController extends Controller
             'message' => 'User created successfully'
         ], 201);
     }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+    }
 }
