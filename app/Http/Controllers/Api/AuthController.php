@@ -9,9 +9,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class AuthController extends Controller
 {
+
+    /** @param User $user */
+    public function __construct(
+        private ?Authenticatable $user
+    ) {
+    }
+
     public function register(RegisterRequest $request)
     {
         $user = User::create([
@@ -54,6 +62,14 @@ class AuthController extends Controller
             'errors'  => null,
             'token'   => $token,
             'message' => 'Login Successful'
+        ], 200);
+    }
+
+    public function logout()
+    {
+        $this->user?->currentAccessToken()->delete();
+        return response()->json([
+            'message' => 'Logout Successful'
         ], 200);
     }
 }
